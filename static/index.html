@@ -142,12 +142,16 @@ limitations under the License.
 <body>
 
 <!-- Available shirts. Maps unique string identifier to color and image URL string. -->
-	<amp-state id="shirts">
+	<amp-state id="shirts" [src]="'/shirts/sizesAndPrices?sku=' + selected.sku">
 		<script type="application/json">
 			{
 				"1001": {
 					"color": "black",
-					"image": "./shirts/black.jpg"
+					"image": "./shirts/black.jpg",
+					"sizes": {
+						"XS": 8.99,
+						"S": 9.99
+					}
 				},
 				"1002": {
 					"color": "blue",
@@ -223,7 +227,8 @@ limitations under the License.
 					Tip: <amp-selector> functions like an <input> element when nested in a <form>.
 					@see https://www.ampproject.org/docs/reference/components/amp-form#inputs-and-fields
 				-->
-				<amp-selector name="color" on="select:AMP.setState({selected: {sku: event.targetOption}})">
+				<amp-selector name="color" 
+					on="select:AMP.setState({selected: {sku: event.targetOption}})">
 					<table>
 						<tr>
 							<td><amp-img width=40 height=40 option="1001" src="./shirts/swatch/black.jpg" selected></amp-img></td>
@@ -243,33 +248,32 @@ limitations under the License.
 
 			<div class="options price">
 				<h6>PRICE :
-					<!-- TODO: "Variable shirt prices" -->
-					$9.99
+					<!-- Display the price of the selected shirt in the selected size if available.
+					       Otherwise, display the placeholder text -->
+					<span [text]="shirts[selected.sku].sizes[selectedSize] || '---'">---</span>
 				</h6>
 			</div>
 
 			<div class="options sizes">
 				<h6>SIZE :</h6>
 
-				<!-- TODO: "Variable shirt prices" -->
-				<amp-selector name="size">
+				<amp-selector name="size" on="select:AMP.setState({selectedSize: event.targetOption})">
 					<table>
 						<tr>
-							<!-- TODO: "Fetching available sizes for a shirt" -->
-							<td>
+						<!-- If 'XS' size is available for selected SKU, return empty string. Otherwise, return 'unavailable'. -->
+							<td [class]="shirts[selected.sku].sizes['XS'] ? '' : 'unavailable'">
 								<div option="XS">XS</div>
 							</td>
-							<td>
+							<td [class]="shirts[selected.sku].sizes['S'] ? '' : 'unavailable'">
 								<div option="S">S</div>
 							</td>
-							<!-- TODO: "Fetching available sizes for a shirt" -->
-							<td>
+							<td class="unavailable" [class]="shirts[selected.sku].sizes['M'] ? '' : 'unavailable'">
 								<div option="M">M</div>
 							</td>
-							<td>
+							<td class="unavailable" [class]="shirts[selected.sku].sizes['L'] ? '' : 'unavailable'">
 								<div option="L">L</div>
 							</td>
-							<td>
+							<td class="unavailable" [class]="shirts[selected.sku].sizes['XL'] ? '' : 'unavailable'">
 								<div option="XL">XL</div>
 							</td>
 						</tr>
@@ -287,9 +291,9 @@ limitations under the License.
 			</div>
 
 			<div class="options purchase">
-				<!-- TODO: "Conditionally enabled button" -->
-				<input type="submit" value="ADD TO CART"
-						class="mdl-button mdl-button--raised mdl-button--accent">
+				<input type="submit" value="ADD TO CART" disabled
+					class="mdl-button mdl-button--raised mdl-button--accent"
+					[disabled]="!selectedSize || !shirts[selected.sku].sizes[selectedSize]">
 			</div>
 
 			<div submit-success>
