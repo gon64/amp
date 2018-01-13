@@ -200,7 +200,7 @@ limitations under the License.
 		<h5 class="title">MEN'S COTTON CREW NECK<br>LONG SLEEVE T-SHIRT</h5>
 		<h6 class="rating"><span class="mdl-color-text--red">★★★★☆</span> <span class="mdl-color-text--grey">(14)</span></h6>
 
-		<amp-carousel type="slides" layout="fixed-height" height=250 id="carousel" on="slideChange:AMP.setState({selected: {slide: event.index}})">
+		<amp-carousel type="slides" layout="fixed-height" height=250 id="carousel" on="slideChange:AMP.setState({selected: {slide: event.index}})" [slide]="selected.slide">
 			<!-- Update the `src` of each <amp-img> when the `selected.sku` variable changes. -->
 			<amp-img width=200 height=250 src="./shirts/black.jpg" [src]="shirts[selected.sku].image"></amp-img>
 			<amp-img width=300 height=375 src="./shirts/black.jpg" [src]="shirts[selected.sku].image"></amp-img>
@@ -210,9 +210,9 @@ limitations under the License.
 		<!-- TODO: "Add a slide indicator" -->
 		<p class="dots">
 			<!-- The <span> element corresponding to the current displayed slide will have the 'current' CSS class. -->
-			<span [class]="selected.slide == 0 ? 'current' : ''" class="current"></span>
-			<span [class]="selected.slide == 1 ? 'current' : ''"></span>
-			<span [class]="selected.slide == 2 ? 'current' : ''"></span>
+			<span [class]="selected.slide == 0 ? 'current' : ''" class="current" on="tap:AMP.setState({selected: {slide: 0}})"></span>
+			<span [class]="selected.slide == 1 ? 'current' : ''" on="tap:AMP.setState({selected: {slide: 1}})"></span>
+			<span [class]="selected.slide == 2 ? 'current' : ''" on="tap:AMP.setState({selected: {slide: 2}})"></span>
 		</p>
 
 		<form method="post" action-xhr="/shirts/addToCart" target="_top">
